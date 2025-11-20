@@ -1,4 +1,11 @@
 from django.db import models
+from locations.models import LocationRoot, Rack, Section
+
+class Book(models.Model):
+    location_root = models.ForeignKey(LocationRoot, on_delete=models.SET_NULL, null=True)
+    rack = models.ForeignKey(Rack, on_delete=models.SET_NULL, null=True, blank=True)
+    section = models.ForeignKey(Section, on_delete=models.SET_NULL, null=True, blank=True)
+
 
 class Book(models.Model):
     title = models.CharField("Название", max_length=200)
@@ -7,15 +14,24 @@ class Book(models.Model):
     total_copies = models.PositiveIntegerField("Всего экземпляров", default=1)
     available_copies = models.PositiveIntegerField("Доступно экземпляров", default=0)
 
-    year = models.PositiveIntegerField(null=True, blank=True)
-    genre = models.CharField(max_length=255, blank=True)
-    description = models.TextField(blank=True)
-    cover = models.URLField(null=True, blank=True)
+    year = models.PositiveIntegerField("Год издания", null=True, blank=True)
+    genre = models.CharField("Жанр", max_length=255, blank=True)
+    description = models.TextField("Описание", blank=True)
+    cover = models.URLField("Обложка", null=True, blank=True)
+    pages = models.PositiveIntegerField("Количество страниц", null=True, blank=True)
+
+    location_root = models.ForeignKey(LocationRoot, on_delete=models.SET_NULL, null=True)
+    rack = models.ForeignKey(Rack, on_delete=models.SET_NULL, null=True, blank=True)
+    section = models.ForeignKey(Section, on_delete=models.SET_NULL, null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        # При сохранении устанавливаем available_copies, если не задано
         if self.available_copies == 0:
             self.available_copies = self.total_copies
+
+        if self.shelf:
+            self.shelving = self.shelf.shelving
+            self.library = self.shelf.shelving.library
+
         super().save(*args, **kwargs)
 
     def __str__(self):

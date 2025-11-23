@@ -1,8 +1,9 @@
+/* ==================== Контейнер страницы ==================== */
+
 .page {
     max-width: 1200px;
-    /* увеличиваем контейнер, чтобы вместить больше колонок */
     margin: auto;
-    padding: 2rem;
+    padding: 1.5rem;
 }
 
 .title {
@@ -20,15 +21,19 @@
     border-radius: 6px;
     cursor: pointer;
     font-weight: bold;
+    transition: transform 0.2s ease;
 }
 
 .add:hover {
     transform: scale(1.05);
 }
 
+
+/* ==================== Таблица ==================== */
+
 .table-wrapper {
-    overflow-x: hidden;
-    /* убираем горизонтальный скролл */
+    overflow-x: auto;
+    /* скролл на узких экранах */
     border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     margin-bottom: 1rem;
@@ -36,23 +41,18 @@
 
 .table {
     width: 100%;
-    /* растягиваем таблицу по ширине контейнера */
     border-collapse: collapse;
     background: white;
     table-layout: auto;
-    /* колонки подстраиваются под содержимое */
 }
 
 .table th,
 .table td {
-    padding: 0.75rem 1rem;
+    padding: 0.6rem 0.8rem;
     border-bottom: 1px solid #e5e5e5;
     text-align: left;
     vertical-align: middle;
-    white-space: normal;
-    /* разрешаем перенос текста */
     word-wrap: break-word;
-    /* перенос длинных слов */
     font-size: 0.9rem;
 }
 
@@ -66,90 +66,7 @@
 }
 
 
-/* Контроль ширины колонок */
-
-.table th:nth-child(1),
-.table td:nth-child(1) {
-    width: 50px;
-}
-
-
-/* ID */
-
-.table th:nth-child(2),
-.table td:nth-child(2) {
-    width: 60px;
-}
-
-
-/* Обложка */
-
-.table th:nth-child(3),
-.table td:nth-child(3) {
-    width: 200px;
-}
-
-
-/* Название */
-
-.table th:nth-child(4),
-.table td:nth-child(4) {
-    width: 150px;
-}
-
-
-/* Автор */
-
-.table th:nth-child(5),
-.table td:nth-child(5) {
-    width: 60px;
-}
-
-
-/* Год */
-
-.table th:nth-child(6),
-.table td:nth-child(6) {
-    width: 120px;
-}
-
-
-/* Жанр */
-
-.table th:nth-child(7),
-.table td:nth-child(7) {
-    width: 130px;
-}
-
-
-/* ISBN */
-
-.table th:nth-child(8),
-.table td:nth-child(8) {
-    width: 60px;
-}
-
-
-/* Страницы */
-
-.table th:nth-child(9),
-.table td:nth-child(9) {
-    width: 100px;
-}
-
-
-/* Доступно / Всего */
-
-.table th:nth-child(10),
-.table td:nth-child(10) {
-    width: 150px;
-}
-
-
-/* Действия */
-
-
-/* Изображения обложек */
+/* Изображения */
 
 .cover {
     width: 50px;
@@ -196,35 +113,46 @@
 }
 
 
-/* Модальное окно */
+/* ==================== Модалка ==================== */
 
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.45);
+    background: rgba(0, 0, 0, 0.6);
     display: flex;
     justify-content: center;
     align-items: center;
-    animation: fade 0.2s ease;
+    padding: 10px;
+    overflow-y: auto;
+    /* прокрутка, если экран маленький */
+    z-index: 1000;
 }
 
 .modal {
-    background: white;
-    padding: 2rem;
-    border-radius: 12px;
-    width: 500px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-    animation: pop 0.25s ease;
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    /* вертикальная адаптация */
+    overflow-y: auto;
+    box-sizing: border-box;
+    position: relative;
 }
 
 .modal-title {
     margin-bottom: 1rem;
+    font-size: 1.25rem;
 }
 
-.input {
+.input,
+textarea,
+select {
     width: 100%;
+    box-sizing: border-box;
     margin-bottom: 0.8rem;
-    padding: 0.7rem;
+    padding: 0.6rem 0.8rem;
     border-radius: 6px;
     border: 1px solid #ccc;
 }
@@ -236,14 +164,18 @@ textarea.input {
 
 .modal-buttons {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
+    gap: 0.5rem;
     margin-top: 1rem;
 }
+
+
+/* Список подсказок автокомплита */
 
 .suggestions {
     border: 1px solid #ccc;
     max-height: 150px;
-    overflow: auto;
+    overflow-y: auto;
     margin-top: -0.5rem;
     margin-bottom: 0.5rem;
     border-radius: 6px;
@@ -263,11 +195,8 @@ textarea.input {
     background: #f0f0f0;
 }
 
-.empty {
-    text-align: center;
-    margin-top: 2rem;
-    color: #777;
-}
+
+/* Анимации */
 
 @keyframes fade {
     from {

@@ -7,7 +7,8 @@
         <router-link to="/">Главная</router-link> |
         <router-link to="/books">Книги</router-link> |
         <router-link to="/readers">Читатели</router-link> |
-        <router-link to="/loan">Выдать книгу</router-link>
+        <router-link to="/loan">Выдать книгу</router-link> |
+        <router-link to="/locations">Библиотеки</router-link>
       </nav>
     </header>
 

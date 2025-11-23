@@ -18,7 +18,7 @@ class LocationRoot(models.Model):
         return self.name
 
 
-class Rack(models.Model):  # вместо Shelving
+class Rack(models.Model):
     root = models.ForeignKey(
         LocationRoot,
         on_delete=models.CASCADE,
@@ -27,10 +27,10 @@ class Rack(models.Model):  # вместо Shelving
     number = models.CharField(max_length=50)
 
     def __str__(self):
-        return f"{self.root.name} — Рад {self.number}"
+        return self.number
 
 
-class Section(models.Model):  # вместо Shelf
+class Section(models.Model):
     rack = models.ForeignKey(
         Rack,
         on_delete=models.CASCADE,
@@ -39,6 +39,6 @@ class Section(models.Model):  # вместо Shelf
     number = models.CharField(max_length=50)
 
     def __str__(self):
-        return f"{self.rack} — Секция {self.number}"
+        return self.number
 
 

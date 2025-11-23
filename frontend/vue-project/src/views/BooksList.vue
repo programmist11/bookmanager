@@ -13,6 +13,11 @@
             <th>Автор</th>
             <th>Год</th>
             <th>Жанр</th>
+            <th>ISBN</th>
+            <th>Страницы</th>
+            <th>Библиотека</th>
+            <th>Стеллаж</th>
+            <th>Полка</th>
             <th>Доступно / Всего</th>
             <th class="actions-col">Действия</th>
           </tr>
@@ -27,6 +32,11 @@
             <td>{{ book.author }}</td>
             <td>{{ book.year }}</td>
             <td>{{ book.genre }}</td>
+            <td>{{ book.isbn }}</td>
+            <td>{{ book.pages }}</td>
+            <td>{{ book.location_root_name || '-' }}</td>
+            <td>{{ book.rack_number || '-' }}</td>
+            <td>{{ book.section_number || '-' }}</td>
             <td>{{ book.available_copies }} / {{ book.total_copies }}</td>
             <td>
               <button @click="openModal(book)" class="btn edit">✏️</button>
@@ -54,10 +64,28 @@
         <input v-model="form.author" placeholder="Автор" class="input" />
         <input v-model="form.year" type="number" placeholder="Год" class="input" />
         <input v-model="form.genre" placeholder="Жанр" class="input" />
+        <input v-model="form.isbn" placeholder="ISBN" class="input" />
+        <input v-model.number="form.pages" type="number" placeholder="Страницы" class="input" />
         <textarea v-model="form.description" placeholder="Описание" class="input"></textarea>
         <input v-model="form.cover" placeholder="URL обложки" class="input" />
         <input v-model.number="form.total_copies" type="number" placeholder="Всего копий" class="input" />
         <input v-model.number="form.available_copies" type="number" placeholder="Доступно копий" class="input" />
+
+        <!-- Селекторы локации -->
+        <select v-model="form.location_root" class="input" @change="loadRacks">
+          <option value="">Выберите библиотеку</option>
+          <option v-for="root in locationRoots" :key="root.id" :value="root.id">{{ root.name }}</option>
+        </select>
+
+        <select v-model="form.rack" class="input" @change="loadSections">
+          <option value="">Выберите стеллаж</option>
+          <option v-for="rack in racks" :key="rack.id" :value="rack.id">{{ rack.number }}</option>
+        </select>
+
+        <select v-model="form.section" class="input">
+          <option value="">Выберите полку</option>
+          <option v-for="section in sections" :key="section.id" :value="section.id">{{ section.number }}</option>
+        </select>
 
         <div class="modal-buttons">
           <button @click="submitBook" class="btn save">{{ editingBook ? 'Сохранить' : 'Добавить' }}</button>
@@ -71,15 +99,22 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
+import '../assets/css/books_list.css'
 
 const books = ref([])
 const modalOpen = ref(false)
 const editingBook = ref(null)
 const form = ref({
-  title: '', author:'', year:'', genre:'', description:'', cover:'', total_copies:1, available_copies:1
+  title: '', author:'', year:'', genre:'', description:'', cover:'', isbn:'', pages:0,
+  total_copies:1, available_copies:1, location_root:'', rack:'', section:''
 })
 const suggestions = ref([])
 
+const locationRoots = ref([])
+const racks = ref([])
+const sections = ref([])
+
+// Загрузка книг
 const loadBooks = async () => {
   try {
     const res = await axios.get('http://127.0.0.1:8000/book/')
@@ -87,31 +122,85 @@ const loadBooks = async () => {
   } catch(e){ console.error(e) }
 }
 
+// Загрузка локаций
+const loadLocationRoots = async () => {
+  try {
+    const res = await axios.get('http://127.0.0.1:8000/locations/roots/')
+    locationRoots.value = res.data
+  } catch(e){ console.error(e) }
+}
+
+// Загрузка стеллажей по root
+const loadRacks = async () => {
+  if(!form.value.location_root) { racks.value = []; return }
+  try {
+    const res = await axios.get(`http://127.0.0.1:8000/locations/roots/${form.value.location_root}/racks/`)
+    racks.value = res.data
+    sections.value = []
+    form.value.rack = ''
+    form.value.section = ''
+  } catch(e){ console.error(e) }
+}
+
+// Загрузка полок по rack
+const loadSections = async () => {
+  if(!form.value.rack) { sections.value = []; return }
+  try {
+    const res = await axios.get(`http://127.0.0.1:8000/locations/racks/${form.value.rack}/sections/`)
+    sections.value = res.data
+    form.value.section = ''
+  } catch(e){ console.error(e) }
+}
+
 const openModal = (book=null) => {
   modalOpen.value = true
   if(book){
     editingBook.value = book
-    form.value = { ...book }
+    form.value = {
+      ...book,
+      location_root: book.location_root?.id || '',
+      rack: book.rack?.id || '',
+      section: book.section?.id || ''
+    }
+    loadRacks()
+    loadSections()
   } else {
     editingBook.value = null
-    form.value = { title:'', author:'', year:'', genre:'', description:'', cover:'', total_copies:1, available_copies:1 }
+    form.value = {
+      title:'', author:'', year:'', genre:'', description:'', cover:'', isbn:'', pages:0,
+      total_copies:1, available_copies:1, location_root:'', rack:'', section:''
+    }
+    racks.value = []
+    sections.value = []
   }
 }
 
 const closeModal = () => {
   modalOpen.value = false
-  form.value = { title:'', author:'', year:'', genre:'', description:'', cover:'', total_copies:1, available_copies:1 }
+  form.value = {
+    title:'', author:'', year:'', genre:'', description:'', cover:'', isbn:'', pages:0,
+    total_copies:1, available_copies:1, location_root:'', rack:'', section:''
+  }
   suggestions.value = []
   editingBook.value = null
+  racks.value = []
+  sections.value = []
 }
 
 const submitBook = async () => {
   try {
+    const payload = {
+      ...form.value,
+      location_root: form.value.location_root || null,
+      rack: form.value.rack || null,
+      section: form.value.section || null
+    }
+
     if(editingBook.value){
-      await axios.put(`http://127.0.0.1:8000/book/${editingBook.value.id}/`, form.value)
+      await axios.put(`http://127.0.0.1:8000/book/${editingBook.value.id}/`, payload)
       alert("Книга обновлена!")
     } else {
-      await axios.post("http://127.0.0.1:8000/book/", form.value)
+      await axios.post("http://127.0.0.1:8000/book/", payload)
       alert("Книга добавлена!")
     }
     closeModal()
@@ -125,6 +214,7 @@ const deleteBook = async (id) => {
   catch(e){ alert("Ошибка при удалении") }
 }
 
+// Автодополнение по названию
 const searchBook = async () => {
   if(form.value.title.length < 3){ suggestions.value = []; return }
   try {
@@ -140,52 +230,15 @@ const fillBook = (bookData) => {
   form.value.genre = bookData.genre || ''
   form.value.description = bookData.description || ''
   form.value.cover = bookData.cover || ''
-  form.value.total_copies = bookData.total_copies || 1
-  form.value.available_copies = bookData.available_copies || 1
+  form.value.isbn = bookData.isbn || ''
+  form.value.pages = bookData.pages || 0
+  form.value.total_copies = bookData.total_copies || 5
+  form.value.available_copies = bookData.available_copies || 5
   suggestions.value = []
 }
 
-onMounted(loadBooks)
+onMounted(() => {
+  loadBooks()
+  loadLocationRoots()
+})
 </script>
-
-<style scoped>
-.page { max-width: 1000px; margin:auto; padding:2rem; }
-.title { text-align:center; font-size:2rem; margin-bottom:1rem; }
-
-.add { background:#2e7d32; color:white; margin-bottom:1rem; padding:0.6rem 1rem; border:none; border-radius:6px; cursor:pointer; font-weight:bold }
-.add:hover { transform:scale(1.05); }
-
-.table-wrapper { overflow-x:auto; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
-.table { width:100%; border-collapse:collapse; background:white; table-layout: fixed; }
-.table th, .table td { padding:0.75rem 1rem; border-bottom:1px solid #e5e5e5; text-align:left; vertical-align:middle; }
-.table th { background:#f5f5f5; font-weight:bold; }
-.table tr:hover { background:#f9fafc }
-
-.cover { width:50px; height:auto; border-radius:4px; }
-.mini-cover { width:30px; height:auto; margin-right:0.5rem; vertical-align:middle; }
-
-.actions-col { width:120px; }
-.actions { display:flex; justify-content:flex-end; align-items:center; gap:0.5rem; }
-
-.btn { border:none; padding:0.4rem 0.7rem; font-size:0.9rem; cursor:pointer; border-radius:6px; transition:0.2s ease }
-.edit { background:#1976d2; color:white }
-.delete { background:#d32f2f; color:white }
-.save { background:#42b983; color:white }
-.cancel { background:#b0bec5 }
-
-.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.45); display:flex; justify-content:center; align-items:center; animation:fade 0.2s ease }
-.modal { background:white; padding:2rem; border-radius:12px; width:500px; box-shadow:0 4px 16px rgba(0,0,0,0.2); animation:pop 0.25s ease }
-.modal-title { margin-bottom:1rem }
-.input { width:100%; margin-bottom:0.8rem; padding:0.7rem; border-radius:6px; border:1px solid #ccc; }
-textarea.input { resize:vertical; height:80px; }
-.modal-buttons { display:flex; justify-content:space-between; margin-top:1rem }
-
-.suggestions { border:1px solid #ccc; max-height:150px; overflow:auto; margin-top:-0.5rem; margin-bottom:0.5rem; border-radius:6px; background:white; list-style:none; padding:0 }
-.suggestions li { padding:0.5rem; cursor:pointer; display:flex; align-items:center; }
-.suggestions li:hover { background:#f0f0f0 }
-
-.empty { text-align:center; margin-top:2rem; color:#777 }
-
-@keyframes fade { from{opacity:0} to{opacity:1} }
-@keyframes pop { from{opacity:0; transform:scale(0.9)} to{opacity:1; transform:scale(1)} }
-</style>

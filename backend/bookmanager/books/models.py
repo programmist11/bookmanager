@@ -20,12 +20,14 @@ class Book(models.Model):
     section = models.ForeignKey(Section, on_delete=models.SET_NULL, null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        if self.available_copies == 0:
+        if self._state.adding and self.available_copies == 0:
             self.available_copies = self.total_copies
 
-        if self.shelf:
-            self.shelving = self.shelf.shelving
-            self.library = self.shelf.shelving.library
+        if self.section and not self.rack:
+            self.rack = self.section.rack
+
+        if self.rack and not self.location_root:
+            self.location_root = self.rack.location_root
 
         super().save(*args, **kwargs)
 

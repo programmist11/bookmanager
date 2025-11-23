@@ -54,7 +54,7 @@ def book_autocomplete(request):
     params = {
         "q": f"intitle:{query}",
         "langRestrict": "ru",
-        "maxResults": 10
+        "maxResults": 15
     }
 
     try:
@@ -64,13 +64,23 @@ def book_autocomplete(request):
         books = []
         for item in data.get("items", []):
             volume = item.get("volumeInfo", {})
+
+            # Достаем ISBN-13
+            isbn_13 = next(
+                (id_info['identifier'] for id_info in volume.get("industryIdentifiers", [])
+                 if id_info.get('type') == "ISBN_13"),
+                None
+            )
+
             books.append({
                 "title": volume.get("title"),
-                "author": ", ".join(volume.get("authors", [])),  # добавляем авторов
-                "year": volume.get("publishedDate", "")[:4],  # берем только год
+                "author": ", ".join(volume.get("authors", [])),
+                "year": volume.get("publishedDate", "")[:4],
                 "genre": ", ".join(volume.get("categories", [])),
                 "description": volume.get("description", ""),
-                "cover": volume.get("imageLinks", {}).get("thumbnail", "")
+                "cover": volume.get("imageLinks", {}).get("thumbnail", ""),
+                "pages": volume.get("pageCount"),
+                "isbn": isbn_13  # только ISBN-13
             })
 
         return Response(books)

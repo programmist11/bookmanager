@@ -24,7 +24,7 @@ body {
   color: var(--text-color);
 }
 
-.table {
+/* .table {
   background-color: var(--table-bg);
 }
 
@@ -41,4 +41,4 @@ body {
 .select:focus {
   border-color: var(--primary-color);
   box-shadow: 0 0 4px rgba(99, 102, 241, 0.4);
-}
+} */

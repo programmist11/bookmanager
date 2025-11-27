@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <h1 class="title">👥 Список читателей</h1>
+    <!-- <h1 class="title">👥 Список читателей</h1> -->
 
     <!-- Кнопка добавления читателя -->
     <button @click="openAddModal" class="btn add">➕ Добавить читателя</button>
@@ -103,94 +103,7 @@ const createReader = async () => {
 
 onMounted(loadReaders)
 </script>
-
 <style scoped>
-/* Темная тема */
-body.dark .page {
-    background-color: #121212;
-    color: #f5f5f5;
-}
-
-body.dark .table {
-    background-color: #1e1e1e;
-    border-color: #444;
-}
-
-body.dark .table th {
-    background-color: #2c2c2c;
-    color: #f5f5f5;
-}
-
-body.dark .table td {
-    color: #f5f5f5;
-    border-bottom: 1px solid #444;
-}
-
-body.dark .table tbody tr:hover {
-    background-color: #333;
-}
-
-body.dark .modal {
-    background-color: #1f1f1f;
-    color: #f5f5f5;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.7);
-}
-
-body.dark .input,
-body.dark textarea,
-body.dark select {
-    background-color: #2c2c2c;
-    color: #f5f5f5;
-    border: 1px solid #555;
-}
-
-body.dark .btn.add,
-body.dark .btn.save {
-    background-color: #6366f1;
-    color: white;
-}
-
-body.dark .btn.edit {
-    background-color: #1e88e5;
-    color: white;
-}
-
-body.dark .btn.delete {
-    background-color: #e53935;
-    color: white;
-}
-
-body.dark .btn.cancel {
-    background-color: #555;
-    color: white;
-}
-
-body.dark .suggestions {
-    background-color: #2c2c2c;
-    border-color: #555;
-}
-
-body.dark .suggestions li:hover {
-    background-color: #3a3a3a;
-}
-
-.page { max-width: 900px; margin:auto; padding:2rem; }
-.title { text-align:center; font-size:2rem; margin-bottom:1rem; color:#333 }
-.add { background:#2e7d32; color:white; margin-bottom:1rem; padding:0.6rem 1rem; font-weight:bold; border:none; border-radius:6px; cursor:pointer }
-.add:hover { transform:scale(1.05) }
-.table-wrapper { overflow-x:auto; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1) }
-.table { width:100%; border-collapse:collapse; background:white }
-.table th, .table td { padding:0.9rem 1rem; border-bottom:1px solid #e5e5e5; text-align:left }
-.table th { background:#f5f5f5; font-weight:bold; color:#444 }
-.table tr:hover { background:#f9fafc }
-.actions-col { width:110px }
-.actions { display:flex; gap:0.5rem }
-.btn { border:none; padding:0.4rem 0.7rem; font-size:0.9rem; cursor:pointer; border-radius:6px; transition:0.2s ease }
-.btn:hover { transform:scale(1.1) }
-.edit { background:#1976d2; color:white }
-.delete { background:#d32f2f; color:white }
-.save { background:#42b983; color:white }
-.cancel { background:#b0bec5 }
 .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.45); display:flex; justify-content:center; align-items:center; animation:fade 0.2s ease }
 .modal { background:white; padding:2rem; border-radius:12px; width:420px; box-shadow:0 4px 16px rgba(0,0,0,0.2); animation:pop 0.25s ease }
 .modal-title { margin-bottom:1rem }
@@ -198,5 +111,5 @@ body.dark .suggestions li:hover {
 .modal-buttons { display:flex; justify-content:space-between }
 .empty { text-align:center; margin-top:2rem; color:#777 }
 @keyframes fade { from{opacity:0} to{opacity:1} }
-@keyframes pop { from{opacity:0; transform:scale(0.9)} to{opacity:1; transform:scale(1)} }
-</style>
+@keyframes pop { from{opacity:0; transform:scale(0.9)} to{opacity:1; transform:scale(1)} } 
+</style> 

@@ -24,9 +24,9 @@
     </button>
 
     <!-- Список выданных книг -->
-    <div v-if="loans.length > 0" class="loan-list">
+    <div v-if="loans.length > 0" class="table-wrapper">
       <h2>Список выданных книг</h2>
-      <table>
+      <table class="table">
         <thead>
           <tr>
             <th>ID</th>
@@ -151,42 +151,15 @@ onMounted(async () => {
 })
 </script>
 
-<style scoped>
-/* ==================== Контейнер страницы ==================== */
-.page {
-  max-width: 1200px;
-  margin: auto;
-  padding: 1.5rem;
-}
 
-/* Заголовок */
+<style scoped>
 .page h1 {
   text-align: center;
   font-size: 2rem;
   margin-bottom: 1rem;
 }
 
-/* ==================== Селекты и input ==================== */
-/* .select,
-input,
-textarea {
-  display: block;
-  width: 100%;
-  max-width: 400px;
-  margin: 0.5rem 0;
-  padding: 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  box-sizing: border-box;
-} */
 
-/* .select:focus,
-input:focus,
-textarea:focus {
-  outline: none;
-  border-color: #42b983;
-  transition: border-color 0.3s ease;
-} */
 
 /* ==================== Кнопки ==================== */
 .btn {
@@ -213,62 +186,4 @@ textarea:focus {
   background: #1976d2;
   padding: 0.5rem 1rem;
 }
-
-/* ==================== Таблица ==================== */
-.loan-list {
-  margin-top: 2rem;
-  overflow-x: auto;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
-}
-
-th, td {
-  padding: 0.75rem;
-  border: 1px solid #1c0e0e;
-  text-align: left;
-}
-
-th {
-  background-color: #adb8c3;
-  font-weight: bold;
-}
-
-tr:nth-child(even) {
-  background-color: #e6e0e0;
-}
-
-tr:hover {
-  background-color: #e0f0ff;
-  transition: background-color 0.3s ease;
-}
-
-/* Тёмная тема */
-body.dark th, body.dark td {
-  border: 1px solid #555;        /* рамка */
-  color: #f5f5f5;                /* текст */
-}
-
-body.dark th {
-  background-color: #2c2c2c;     /* фон шапки */
-}
-
-body.dark tr:nth-child(even) {
-  background-color: #3a3a3a;     /* фон четных строк */
-}
-
-body.dark tr:hover {
-  background-color: #555;         /* подсветка при наведении */
-}
-
-p {
-  color: #4e2b2b;
-  font-style: italic;
-}
-
 </style>

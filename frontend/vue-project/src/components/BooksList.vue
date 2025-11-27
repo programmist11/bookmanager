@@ -1,6 +1,5 @@
 <template>
   <div class="page">
-    <h1 class="title">📚 Список книг</h1>
     <button @click="openModal()" class="btn add">➕ Добавить книгу</button>
 
     <BookTable 

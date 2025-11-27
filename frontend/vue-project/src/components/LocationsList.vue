@@ -1,6 +1,6 @@
 <template>
   <div class="page">
-    <h1 class="title">📚 Книги по структуре библиотеки</h1>
+    <!-- <h1 class="title">📚 Книги по структуре библиотеки</h1> -->
 
     <!-- 1. Выбор библиотеки -->
     <div class="filter">
@@ -81,7 +81,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
-import '../assets/css/locations_selects.css'
 
 const API = "http://127.0.0.1:8000"
 

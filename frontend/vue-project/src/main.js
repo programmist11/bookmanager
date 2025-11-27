@@ -3,14 +3,14 @@ import App from './App.vue'
 import router from './router'
 
 // Подключаем CSS с темами
-import './assets/css/theme.css'
+import './assets/styles/main.css'
+
 
 const app = createApp(App)
 app.use(router)
 app.mount('#app')
 
-// Проверка, нужно ли включить темную тему по умолчанию
-// Например, можно сохранять в localStorage
+
 const isDark = localStorage.getItem('darkMode') === 'true'
 if (isDark) {
   document.body.classList.add('dark')

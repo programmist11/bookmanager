@@ -32,7 +32,7 @@
           <td>{{ book.rack_number || '-' }}</td>
           <td>{{ book.section_number || '-' }}</td>
           <td>{{ book.available_copies }} / {{ book.total_copies }}</td>
-          <td>
+          <td class="btn-actions">
             <button @click="$emit('editBook', book)" class="btn edit">✏️</button>
             <button @click="$emit('deleteBook', book.id)" class="btn delete">🗑️</button>
           </td>

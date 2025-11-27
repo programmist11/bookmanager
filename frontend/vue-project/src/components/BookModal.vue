@@ -70,14 +70,18 @@ const fillBook = (bookData) => emit('fillBook', bookData)
 
 <style scoped>
 .modal {
-  max-height: 80vh; /* Ограничиваем высоту окна */
-  width: 500px;
   background: white;
   padding: 20px;
   border-radius: 10px;
-  display: flex;
-  flex-direction: column;
+
+  width: 100%;
+  max-width: 1000px; 
+  max-height: 80vh;
+
+  overflow-y: auto;
+  box-sizing: border-box;
 }
+
 
 .modal-content {
   overflow-y: auto; /* Включаем вертикальный скролл */
@@ -88,7 +92,6 @@ const fillBook = (bookData) => emit('fillBook', bookData)
 .modal-buttons {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
 }
 
 .input {

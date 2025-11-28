@@ -165,7 +165,6 @@ http://127.0.0.1:8000/book/autocomplete/?title=<название книги>
 
 ```http
 GET /book/autocomplete/?title=Идиот
-Пример ответа:
 {
   "title": "Идиот",
   "author": "Фёдор Достоевский",
